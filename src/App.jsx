@@ -1,9 +1,7 @@
+import LandingPage from './pages/LandingPage'
+
 function App() {
-    return (
-        <>
-            <h1>Hifzhi</h1>
-        </>
-    )
+    return <LandingPage />
 }
 
 export default App
