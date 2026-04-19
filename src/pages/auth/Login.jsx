@@ -3,10 +3,12 @@ import { FiUser, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi"
 import Navbar from "/src/components/Navbar"
 import { useForm } from "react-hook-form"
 import { supabase } from "/src/lib/supabase.js"
+import { useNavigate } from "react-router"
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false)
     const { register, handleSubmit } = useForm()
+    const navigate = useNavigate()
 
     async function login({ username, password }) {
         const { data, error } = await supabase.from("user_profiles").select("email").eq("username", username).single()
@@ -26,9 +28,7 @@ const Login = () => {
             alert("Username atau password salah", authError)
             return
         }
-        console.log("Login berhasil", authData)
-
-        return authData
+        navigate("/")
     }
     return (
         <>
