@@ -8,36 +8,24 @@ const Login = () => {
     return (
         <>
             <Navbar />
-
             <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        
-                <section
-                    className="
-            bg-white 
-            p-6 sm:p-8 
-            rounded-2xl 
-            shadow-md 
-            w-full 
-            max-w-sm sm:max-w-md
-          "
-                >
-          
+                <section className="bg-white p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-sm sm:max-w-md">
                     {/* Header */}
                     <header className="text-center mb-6">
                         <h1 className="text-xl sm:text-2xl font-bold text-[#00450D]">
-              Masuk ke Akun Anda
+                            Masuk ke Akun Anda
                         </h1>
                         <p className="text-gray-500 text-xs sm:text-sm">
-              Silakan masukkan kredensial Anda untuk melanjutkan.
+                            Silakan masukkan kredensial Anda untuk melanjutkan.
                         </p>
                     </header>
 
                     <form>
-            
+
                         {/* Username */}
                         <div className="mb-4">
                             <label htmlFor="username" className="block text-sm mb-1">
-                Username
+                                Username
                             </label>
 
                             <div className="flex items-center bg-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-green-500">
@@ -57,7 +45,7 @@ const Login = () => {
                         {/* Password */}
                         <div className="mb-6">
                             <label htmlFor="password" className="block text-sm mb-1">
-                Password
+                                Password
                             </label>
 
                             <div className="flex items-center bg-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-green-500">
@@ -102,7 +90,7 @@ const Login = () => {
                 text-sm sm:text-base
               "
                         >
-              Masuk
+                            Masuk
                             <FiArrowRight />
                         </button>
 
