@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { FiUser, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi"
 import Navbar from "/src/components/Navbar"
 import { useForm } from "react-hook-form"
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router"
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false)
+    const [loading, setLoading] = useState(true)
     const { register, handleSubmit } = useForm()
     const navigate = useNavigate()
 
@@ -18,7 +19,7 @@ const Login = () => {
             return
         }
 
-        const { data: authData, error: authError } =
+        const { error: authError } =
             await supabase.auth.signInWithPassword({
                 email: data.email,
                 password: password
@@ -30,6 +31,25 @@ const Login = () => {
         }
         navigate("/")
     }
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+
+            if (session) {
+                navigate("/")
+            } else {
+                setLoading(false)
+            }
+        }
+
+        checkUser()
+    }, [navigate])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
     return (
         <>
             <Navbar />
