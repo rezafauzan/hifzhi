@@ -7,9 +7,27 @@ import { useNavigate } from "react-router"
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false)
-    const [loading, setLoading] = useState(true)
     const { register, handleSubmit } = useForm()
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
+
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session) {
+                navigate("/")
+            } else {
+                setLoading(false)
+            }
+        }
+
+        checkUser()
+    }, [navigate])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
 
     async function login({ username, password }) {
         const { data, error } = await supabase.from("user_profiles").select("email").eq("username", username).single()
@@ -30,24 +48,6 @@ const Login = () => {
             return
         }
         navigate("/")
-    }
-
-    useEffect(() => {
-        const checkUser = async () => {
-            const { data: { session } } = await supabase.auth.getSession()
-
-            if (session) {
-                navigate("/")
-            } else {
-                setLoading(false)
-            }
-        }
-
-        checkUser()
-    }, [navigate])
-
-    if (loading) {
-        return <div>Loading...</div>
     }
 
     return (
