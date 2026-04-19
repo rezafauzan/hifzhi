@@ -14,9 +14,9 @@ export default function Navbar() {
         <nav
             id="navbar"
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-                    ? 'bg-white/95 backdrop-blur-md shadow-sm'
-                    : 'bg-transparent'
-                }`}
+                ? 'bg-white/95 backdrop-blur-md shadow-sm'
+                : 'bg-transparent'
+            }`}
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 lg:h-20">
@@ -78,7 +78,7 @@ export default function Navbar() {
                 {/* Mobile Menu */}
                 <div
                     className={`md:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-60 pb-4' : 'max-h-0'
-                        }`}
+                    }`}
                 >
                     <div className="flex flex-col gap-2 pt-2">
                         <a href="#features" className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-primary transition-colors">
