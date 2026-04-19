@@ -6,20 +6,20 @@
 
 ## 📝 Table of Contents
 
-- [#description](Description)
-- [#demoscreenshots](Demo/Screenshots)
-- [#features](Features)
-- [#tech](Tech/Stack)
-- [#project](Project/Structure)
-- [#prerequisites](Prerequisites)
-- [#installation](Installation)
-- [#usage](Usage)
-- [#contributing](Contributing)
-- [#license](License)
+- [Description](#-description)
+- [Demo/Screenshots](#-demoscreenshots)
+- [Features](#-features)
+- [Tech Stack](#️-tech-stack)
+- [Project Structure](#️-project-structure)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ## 📄 Description
 
-Hifzhi is an open-source web application built with React, Tailwind CSS, SQLite. It aims to provide an intuitive and interactive platform for users to memorize texts, with features such as text highlighting, repetition, and progress tracking.
+Hifzhi is an open-source web application built with React, Tailwind CSS, SQLite. It aims to provide an intuitive and interactive platform for users to memorize assessment, with features such as text highlighting, repetition, and progress tracking.
 
 ## 📸 Demo/Screenshots
 
@@ -27,7 +27,7 @@ Coming soon...
 
 ## ✨ Features
 
-- 🎯 **Text Memorization**: Hifzhi allows users to input and memorize texts, with features such as text highlighting and repetition.
+- 🎯 **Text Memorization**: Hifzhi allows users to input and memorize assessment texts, with features such as text highlighting and repetition.
 - ⚡ **Progress Tracking**: Users can track their progress and set goals for themselves.
 - 🎨 **Customizable**: Hifzhi provides a customizable interface, allowing users to personalize their experience.
 
