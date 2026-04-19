@@ -1,43 +1,75 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { FiUser, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi"
-import Navbar from "../../components/Navbar"
+import Navbar from "/src/components/Navbar"
+import { useForm } from "react-hook-form"
+import { supabase } from "/src/lib/supabase.js"
+import { useNavigate } from "react-router"
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false)
+    const [loading, setLoading] = useState(true)
+    const { register, handleSubmit } = useForm()
+    const navigate = useNavigate()
+
+    async function login({ username, password }) {
+        const { data, error } = await supabase.from("user_profiles").select("email").eq("username", username).single()
+
+        if (error || !data) {
+            alert("Username tidak ditemukan", error)
+            return
+        }
+
+        const { error: authError } =
+            await supabase.auth.signInWithPassword({
+                email: data.email,
+                password: password
+            })
+
+        if (authError) {
+            alert("Username atau password salah", authError)
+            return
+        }
+        navigate("/")
+    }
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+
+            if (session) {
+                navigate("/")
+            } else {
+                setLoading(false)
+            }
+        }
+
+        checkUser()
+    }, [navigate])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <>
             <Navbar />
-
             <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        
-                <section
-                    className="
-            bg-white 
-            p-6 sm:p-8 
-            rounded-2xl 
-            shadow-md 
-            w-full 
-            max-w-sm sm:max-w-md
-          "
-                >
-          
+                <section className="bg-white p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-sm sm:max-w-md">
                     {/* Header */}
                     <header className="text-center mb-6">
                         <h1 className="text-xl sm:text-2xl font-bold text-[#00450D]">
-              Masuk ke Akun Anda
+                            Masuk ke Akun Anda
                         </h1>
                         <p className="text-gray-500 text-xs sm:text-sm">
-              Silakan masukkan kredensial Anda untuk melanjutkan.
+                            Silakan masukkan kredensial Anda untuk melanjutkan.
                         </p>
                     </header>
 
-                    <form>
-            
+                    <form onSubmit={handleSubmit(login)}>
                         {/* Username */}
                         <div className="mb-4">
                             <label htmlFor="username" className="block text-sm mb-1">
-                Username
+                                Username
                             </label>
 
                             <div className="flex items-center bg-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-green-500">
@@ -45,7 +77,7 @@ const Login = () => {
 
                                 <input
                                     id="username"
-                                    name="username"
+                                    {...register("username")}
                                     type="text"
                                     placeholder="Masukkan username"
                                     className="bg-transparent outline-none w-full text-sm sm:text-base"
@@ -57,7 +89,7 @@ const Login = () => {
                         {/* Password */}
                         <div className="mb-6">
                             <label htmlFor="password" className="block text-sm mb-1">
-                Password
+                                Password
                             </label>
 
                             <div className="flex items-center bg-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-green-500">
@@ -65,7 +97,7 @@ const Login = () => {
 
                                 <input
                                     id="password"
-                                    name="password"
+                                    {...register("password")}
                                     type={showPassword ? "text" : "password"}
                                     placeholder="••••••••"
                                     className="bg-transparent outline-none w-full text-sm sm:text-base"
@@ -102,7 +134,7 @@ const Login = () => {
                 text-sm sm:text-base
               "
                         >
-              Masuk
+                            Masuk
                             <FiArrowRight />
                         </button>
 
