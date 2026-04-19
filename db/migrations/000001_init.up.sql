@@ -35,10 +35,9 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS quran_surah (
     id INT PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
+    no_surah INT NOT NULL,
     juz INT NOT NULL,
     total_verses INT NOT NULL,
-    from_the_page INT NOT NULL,
-    to_the_page INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL CURRENT_TIMESTAMP
 );
