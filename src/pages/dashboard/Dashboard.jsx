@@ -1,9 +1,31 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Menu, ChevronDown, Clock } from "lucide-react"
+import { supabase } from "/src/lib/supabase.js"
+import { useNavigate } from "react-router"
 
 export default function Dashboard() {
     const [selectedGrade, setSelectedGrade] = useState("A")
     const [notes, setNotes] = useState("")
+    const [loading, setLoading] = useState(true)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
+                setLoading(false)
+                navigate("/login")
+            } else {
+                setLoading(false)
+            }
+        }
+
+        checkUser()
+    }, [])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -41,7 +63,7 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between">
                         <div className="flex-1">
                             <h1 className="text-2xl font-bold text-gray-800 mb-3">
-                Input Nilai Ujian
+                                Input Nilai Ujian
                             </h1>
                             <div className="flex items-center gap-8 text-sm text-gray-600">
                                 <div className="flex items-center gap-2">
@@ -55,7 +77,7 @@ export default function Dashboard() {
                             </div>
                         </div>
                         <button className="text-gray-700 font-medium hover:text-gray-900">
-              ⏱️ Riwayat
+                            ⏱️ Riwayat
                         </button>
                     </div>
                 </div>
@@ -73,7 +95,7 @@ export default function Dashboard() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-gray-800">
-                      Muhammad Rizky
+                                            Muhammad Rizky
                                         </h3>
                                         <p className="text-xs text-gray-500">NIS: 20230145</p>
                                     </div>
@@ -97,16 +119,15 @@ export default function Dashboard() {
                             {/* Exam Configuration */}
                             <div className="bg-white rounded-lg p-6 shadow-sm">
                                 <h3 className="font-semibold text-gray-800 mb-6 flex items-center gap-2">
-                  ⚙️ Konfigurasi Ujian
+                                    ⚙️ Konfigurasi Ujian
                                 </h3>
                                 <div className="space-y-4">
                                     <div>
                                         <label className="text-xs font-medium text-gray-600 uppercase">
-                      Tanggal Ujian
+                                            Tanggal Ujian
                                         </label>
                                         <input
                                             type="text"
-                                            value="10/24/2023"
                                             className="w-full mt-1 px-3 py-2 bg-gray-100 rounded text-sm"
                                             readOnly
                                         />
@@ -114,7 +135,7 @@ export default function Dashboard() {
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
                                             <label className="text-xs font-medium text-gray-600 uppercase">
-                        JUZ
+                                                JUZ
                                             </label>
                                             <select className="w-full mt-1 px-3 py-2 bg-gray-100 rounded text-sm">
                                                 <option>Juz 30</option>
@@ -122,7 +143,7 @@ export default function Dashboard() {
                                         </div>
                                         <div>
                                             <label className="text-xs font-medium text-gray-600 uppercase">
-                        SURAT
+                                                SURAT
                                             </label>
                                             <select className="w-full mt-1 px-3 py-2 bg-gray-100 rounded text-sm">
                                                 <option>An-Naba</option>
@@ -132,33 +153,30 @@ export default function Dashboard() {
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
                                             <label className="text-xs font-medium text-gray-600 uppercase">
-                        HALAMAN
+                                                HALAMAN
                                             </label>
                                             <input
                                                 type="text"
-                                                value="Misal: 582"
                                                 className="w-full mt-1 px-3 py-2 bg-gray-100 rounded text-sm"
                                             />
                                         </div>
                                         <div>
                                             <label className="text-xs font-medium text-gray-600 uppercase">
-                        AYAT
+                                                AYAT
                                             </label>
                                             <input
                                                 type="text"
-                                                value="1 - 40"
                                                 className="w-full mt-1 px-3 py-2 bg-gray-100 rounded text-sm"
                                             />
                                         </div>
                                     </div>
                                     <div>
                                         <label className="text-xs font-medium text-gray-600 uppercase">
-                      DURASI UJIAN
+                                            DURASI UJIAN
                                         </label>
                                         <div className="flex gap-2 mt-1">
                                             <input
                                                 type="text"
-                                                value="30"
                                                 className="flex-1 px-3 py-2 bg-gray-100 rounded text-sm"
                                             />
                                             <select className="px-3 py-2 bg-gray-100 rounded text-sm">
@@ -177,10 +195,10 @@ export default function Dashboard() {
                             <div className="bg-linear-to-r from-green-700 to-green-800 rounded-lg p-8 text-white shadow-sm">
                                 <div className="text-6xl font-bold mb-2">92</div>
                                 <p className="text-green-100 text-sm">
-                  Pastikan objektifitas dalam memberikan evaluasi
+                                    Pastikan objektifitas dalam memberikan evaluasi
                                 </p>
                                 <div className="mt-4 text-xs uppercase tracking-wider text-green-200">
-                  Skor Sementara
+                                    Skor Sementara
                                 </div>
                             </div>
 
@@ -188,36 +206,34 @@ export default function Dashboard() {
                             <div className="bg-white rounded-lg p-6 shadow-sm">
                                 <div className="flex items-center gap-2 mb-6">
                                     <h3 className="font-semibold text-gray-800">
-                    🎯 Kelancaran (Hafalan)
+                                        🎯 Kelancaran (Hafalan)
                                     </h3>
                                     <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">
-                    AKTIF
+                                        AKTIF
                                     </span>
                                 </div>
                                 <p className="text-xs text-gray-500 mb-6">
-                  Bobot Penilaian: 70%
+                                    Bobot Penilaian: 70%
                                 </p>
                                 <div className="grid grid-cols-3 gap-3">
                                     <div
                                         onClick={() => setSelectedGrade("A+")}
-                                        className={`p-4 rounded border-2 cursor-pointer transition ${
-                                            selectedGrade === "A+"
-                                                ? "border-green-500 bg-green-50"
-                                                : "border-gray-200 hover:border-gray-300"
+                                        className={`p-4 rounded border-2 cursor-pointer transition ${selectedGrade === "A+"
+                                            ? "border-green-500 bg-green-50"
+                                            : "border-gray-200 hover:border-gray-300"
                                         }`}
                                     >
                                         <div className="text-lg font-bold text-green-700">A+</div>
                                         <div className="text-xs text-gray-600 mt-1">91 - 100</div>
                                         <div className="text-xs text-gray-500">
-                      Sangat Lancar (Lulus)
+                                            Sangat Lancar (Lulus)
                                         </div>
                                     </div>
                                     <div
                                         onClick={() => setSelectedGrade("A")}
-                                        className={`p-4 rounded border-2 cursor-pointer transition ${
-                                            selectedGrade === "A"
-                                                ? "border-green-500 bg-green-50"
-                                                : "border-gray-200 hover:border-gray-300"
+                                        className={`p-4 rounded border-2 cursor-pointer transition ${selectedGrade === "A"
+                                            ? "border-green-500 bg-green-50"
+                                            : "border-gray-200 hover:border-gray-300"
                                         }`}
                                     >
                                         <div className="text-lg font-bold text-green-600">A</div>
@@ -226,10 +242,9 @@ export default function Dashboard() {
                                     </div>
                                     <div
                                         onClick={() => setSelectedGrade("B")}
-                                        className={`p-4 rounded border-2 cursor-pointer transition ${
-                                            selectedGrade === "B"
-                                                ? "border-green-500 bg-green-50"
-                                                : "border-gray-200 hover:border-gray-300"
+                                        className={`p-4 rounded border-2 cursor-pointer transition ${selectedGrade === "B"
+                                            ? "border-green-500 bg-green-50"
+                                            : "border-gray-200 hover:border-gray-300"
                                         }`}
                                     >
                                         <div className="text-lg font-bold text-yellow-600">B</div>
@@ -257,16 +272,16 @@ export default function Dashboard() {
                             {/* Fasholah Section */}
                             <div className="bg-white rounded-lg p-6 shadow-sm">
                                 <h3 className="font-semibold text-gray-800 mb-6">
-                  📋 Fasholah (Kefasihan)
+                                    📋 Fasholah (Kefasihan)
                                 </h3>
                                 <p className="text-xs text-gray-500 mb-6">
-                  Bobot Penilaian: 30%
+                                    Bobot Penilaian: 30%
                                 </p>
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center py-3 border-b">
                                         <span className="text-gray-700">Tajwid (Hukum Bacaan)</span>
                                         <span className="font-semibold text-green-700">
-                      85 / 100
+                                            85 / 100
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs text-gray-500 mb-4">
@@ -275,10 +290,10 @@ export default function Dashboard() {
                                     </div>
                                     <div className="flex justify-between items-center py-3 border-b">
                                         <span className="text-gray-700">
-                      Tempo & Irama (Tartil)
+                                            Tempo & Irama (Tartil)
                                         </span>
                                         <span className="font-semibold text-green-700">
-                      90 / 100
+                                            90 / 100
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs text-gray-500 mb-4">
@@ -287,10 +302,10 @@ export default function Dashboard() {
                                     </div>
                                     <div className="flex justify-between items-center py-3 border-b">
                                         <span className="text-gray-700">
-                      Waqaf & Ibtida (Pemberhentian)
+                                            Waqaf & Ibtida (Pemberhentian)
                                         </span>
                                         <span className="font-semibold text-green-700">
-                      88 / 100
+                                            88 / 100
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs text-gray-500">
@@ -303,27 +318,22 @@ export default function Dashboard() {
                             {/* Catatan Penguji */}
                             <div className="bg-white rounded-lg p-6 shadow-sm">
                                 <h3 className="font-semibold text-gray-800 mb-4">
-                  Catatan Penguji
+                                    Catatan Penguji
                                 </h3>
-                                <textarea
-                                    value={notes}
-                                    onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Tuliskan evaluasi khusus, masukan, atau area yang perlu diperbaiki oleh santri..."
-                                    className="w-full h-24 p-4 border border-gray-200 rounded-lg text-sm text-gray-600 placeholder-gray-400 resize-none"
-                                />
+                                <textarea onChange={(e) => setNotes(e.target.value)} placeholder="Tuliskan evaluasi khusus, masukan, atau area yang perlu diperbaiki oleh santri..." className="w-full h-24 p-4 border border-gray-200 rounded-lg text-sm text-gray-600 placeholder-gray-400 resize-none"/>
                             </div>
 
                             {/* Bottom Buttons */}
                             <div className="flex gap-3 justify-between">
                                 <button className="bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-6 rounded-lg flex items-center gap-2 transition">
-                  + Ujian Baru
+                                    + Ujian Baru
                                 </button>
                                 <div className="flex gap-3">
                                     <button className="bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-50 transition">
-                    Simpan Draft
+                                        Simpan Draft
                                     </button>
                                     <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center gap-2 transition">
-                    ✓ Finalisasi Nilai
+                                        ✓ Finalisasi Nilai
                                     </button>
                                 </div>
                             </div>
