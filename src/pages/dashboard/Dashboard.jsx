@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Menu, ChevronDown, Clock } from "lucide-react"
 
 export default function Dashboard() {
-    // const [activeTab, setActiveTab] = useState("input-nilai")
     const [selectedGrade, setSelectedGrade] = useState("A")
     const [notes, setNotes] = useState("")
 
@@ -175,7 +174,7 @@ export default function Dashboard() {
                         {/* Right Column */}
                         <div className="col-span-2 space-y-6">
                             {/* Score Panel */}
-                            <div className="bg-gradient-to-r from-green-700 to-green-800 rounded-lg p-8 text-white shadow-sm">
+                            <div className="bg-linear-to-r from-green-700 to-green-800 rounded-lg p-8 text-white shadow-sm">
                                 <div className="text-6xl font-bold mb-2">92</div>
                                 <p className="text-green-100 text-sm">
                   Pastikan objektifitas dalam memberikan evaluasi
