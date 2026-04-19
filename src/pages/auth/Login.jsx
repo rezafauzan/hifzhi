@@ -1,10 +1,35 @@
 import React from "react"
 import { FiUser, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi"
-import Navbar from "../../components/Navbar"
+import Navbar from "/src/components/Navbar"
+import { useForm } from "react-hook-form"
+import { supabase } from "/src/lib/supabase.js"
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false)
+    const { register, handleSubmit } = useForm()
 
+    async function login({ username, password }) {
+        const { data, error } = await supabase.from("user_profiles").select("email").eq("username", username).single()
+
+        if (error || !data) {
+            alert("Username tidak ditemukan", error)
+            return
+        }
+
+        const { data: authData, error: authError } =
+            await supabase.auth.signInWithPassword({
+                email: data.email,
+                password: password
+            })
+
+        if (authError) {
+            alert("Username atau password salah", authError)
+            return
+        }
+        console.log("Login berhasil", authData)
+
+        return authData
+    }
     return (
         <>
             <Navbar />
@@ -20,8 +45,7 @@ const Login = () => {
                         </p>
                     </header>
 
-                    <form>
-
+                    <form onSubmit={handleSubmit(login)}>
                         {/* Username */}
                         <div className="mb-4">
                             <label htmlFor="username" className="block text-sm mb-1">
@@ -33,7 +57,7 @@ const Login = () => {
 
                                 <input
                                     id="username"
-                                    name="username"
+                                    {...register("username")}
                                     type="text"
                                     placeholder="Masukkan username"
                                     className="bg-transparent outline-none w-full text-sm sm:text-base"
@@ -53,7 +77,7 @@ const Login = () => {
 
                                 <input
                                     id="password"
-                                    name="password"
+                                    {...register("password")}
                                     type={showPassword ? "text" : "password"}
                                     placeholder="••••••••"
                                     className="bg-transparent outline-none w-full text-sm sm:text-base"
