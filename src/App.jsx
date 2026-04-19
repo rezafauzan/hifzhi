@@ -6,6 +6,7 @@ import {
 import LandingPage from "./pages/LandingPage"
 import Login from "./pages/auth/Login"
 import Dashboard from "./pages/Dashboard/Dashboard"
+import Quran from "./pages/quran/index"
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     {
         path: "/dashboard",
         element: <Dashboard />,
+    },
+    {
+        path: "/quran",
+        element: <Quran />,
     },
 ])
 
