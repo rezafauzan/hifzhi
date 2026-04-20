@@ -160,16 +160,16 @@ export default function QuranPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+            <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
                 <div className="text-xl text-gray-600">Loading Quran data...</div>
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg sticky top-0 z-50">
+        <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 flex flex-col">
+            {/* Header - Fixed */}
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg z-50 flex-shrink-0">
                 <div className="max-w-7xl mx-auto px-4 py-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -186,8 +186,8 @@ export default function QuranPage() {
                 </div>
             </div>
 
-            {/* Controls Section - Sticky */}
-            <div className="bg-white shadow-md sticky top-16 z-40">
+            {/* Controls Section - Fixed */}
+            <div className="bg-white shadow-md z-40 flex-shrink-0 border-b border-gray-200 overflow-y-auto max-h-96">
                 <div className="max-w-7xl mx-auto px-4 py-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         {/* Surat Selection */}
@@ -232,7 +232,7 @@ export default function QuranPage() {
                     </div>
 
                     {/* Navigation and Play Full Surah Buttons */}
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="flex gap-2 flex-wrap mb-6">
                         <button
                             onClick={handlePrevSurat}
                             disabled={selectedSurat?.nomor === 1}
@@ -272,7 +272,7 @@ export default function QuranPage() {
 
                     {/* Audio Progress Bar */}
                     {isPlayingFullSurah && (
-                        <div className="mt-4">
+                        <div className="mb-6">
                             <div className="w-full bg-gray-200 rounded-full h-2">
                                 <div
                                     className="bg-green-500 h-2 rounded-full transition-all"
@@ -284,7 +284,7 @@ export default function QuranPage() {
 
                     {/* Surat Info */}
                     {selectedSurat && (
-                        <div className="mt-6 pt-6 border-t border-gray-200">
+                        <div className="pt-6 border-t border-gray-200">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
                                 <div>
                                     <span className="text-gray-600 text-xs uppercase">Name</span>
@@ -311,7 +311,7 @@ export default function QuranPage() {
                 </div>
             </div>
 
-            {/* Verses Display - Scrollable */}
+            {/* Verses Display - Scrollable Only */}
             <div className="flex-1 overflow-y-auto">
                 <div className="max-w-7xl mx-auto px-4 py-8">
                     {loadingAyat ? (
