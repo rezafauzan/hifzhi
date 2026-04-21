@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Uthmani:wght@400&family=Poppins:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -16,6 +19,10 @@
     --color-border: #E2E8F0;
     --color-border-light: #F0F0F0;
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
+    --font-arabic: 'Noto Naskh Arabic', serif;
+    --font-arabic: 'Amiri', serif;
+    --font-arabic: 'Uthmani', serif;
 }
 
 html {

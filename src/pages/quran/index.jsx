@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { ChevronDown, BookOpen, Volume2, Pause, Play, Bookmark, Share2, Copy, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, Bookmark, Copy, Volume2, Pause, Play, Square } from 'lucide-react'
 
 export default function QuranPage() {
     const [suratList, setSuratList] = useState([])
@@ -14,6 +14,8 @@ export default function QuranPage() {
     const [currentPage, setCurrentPage] = useState(1)
     const [isPlayingFullSurah, setIsPlayingFullSurah] = useState(false)
     const [audioProgress, setAudioProgress] = useState(0)
+    const [repeatCount, setRepeatCount] = useState(1)
+    const [currentRepeat, setCurrentRepeat] = useState(0)
     const audioRef = useRef(null)
     const versesPerPage = 10
 
@@ -54,6 +56,7 @@ export default function QuranPage() {
         try {
             const response = await fetch(`https://equran.id/api/v2/surat/${suratNomor}`)
             const data = await response.json()
+            console.log("data", data)
             setAyatList(data.data?.ayat || [])
             setCurrentPage(1)
         } catch (error) {
@@ -65,7 +68,8 @@ export default function QuranPage() {
     }
 
     const handleSuratChange = (e) => {
-        const surat = suratList.find(s => s.nomor == e.target.value)
+        const suratNomor = parseInt(e.target.value)
+        const surat = suratList.find(s => s.nomor === suratNomor)
         if (surat) {
             setSelectedSurat(surat)
             fetchAyat(surat.nomor)
@@ -134,6 +138,42 @@ export default function QuranPage() {
         }
     }
 
+    const playAyahAudio = (ayat) => {
+        if (!ayat.audio || !ayat.audio[selectedReader]) return
+
+        const ayahKey = `${selectedSurat?.nomor}-${ayat.nomorAyat}`
+
+        if (playingAyat === ayahKey) {
+            audioRef.current?.pause()
+            setPlayingAyat(null)
+            setCurrentRepeat(0)
+        } else {
+            if (audioRef.current) {
+                audioRef.current.pause()
+            }
+
+            setIsPlayingFullSurah(false)
+            setPlayingAyat(ayahKey)
+            setCurrentRepeat(1)
+
+            const audio = new Audio(ayat.audio[selectedReader])
+            audioRef.current = audio
+
+            audio.play().catch(err => console.error("Error playing audio:", err))
+
+            audio.onended = () => {
+                if (currentRepeat < repeatCount) {
+                    setCurrentRepeat(prev => prev + 1)
+                    audio.currentTime = 0
+                    audio.play().catch(err => console.error("Error replaying audio:", err))
+                } else {
+                    setPlayingAyat(null)
+                    setCurrentRepeat(0)
+                }
+            }
+        }
+    }
+
     const toggleBookmark = (ayat) => {
         const bookmarkKey = `${selectedSurat?.nomor}-${ayat.nomorAyat}`
         if (bookmarks.includes(bookmarkKey)) {
@@ -161,7 +201,7 @@ export default function QuranPage() {
     if (loading) {
         return (
             <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-                <div className="text-xl text-gray-600">Loading Quran data...</div>
+                <div className="text-xl text-gray-600 font-poppins">Loading Quran data...</div>
             </div>
         )
     }
@@ -175,12 +215,12 @@ export default function QuranPage() {
                         <div className="flex items-center gap-3">
                             <BookOpen size={32} />
                             <div>
-                                <h1 className="text-3xl font-bold">Quran Reader</h1>
-                                <p className="text-green-100 text-sm">Read and study the Holy Quran</p>
+                                <h1 className="text-3xl font-bold font-poppins">Quran Reader</h1>
+                                <p className="text-green-100 text-sm font-poppins">Read and study the Holy Quran</p>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="text-green-100 text-sm">Surat {selectedSurat?.nomor} of 114</p>
+                            <p className="text-green-100 text-sm font-poppins">Surat {selectedSurat?.nomor} of 114</p>
                         </div>
                     </div>
                 </div>
@@ -192,14 +232,14 @@ export default function QuranPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         {/* Surat Selection */}
                         <div className="lg:col-span-2">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 font-poppins">
                                 Select Surah
                             </label>
                             <div className="relative">
                                 <select
                                     value={selectedSurat?.nomor || ""}
                                     onChange={handleSuratChange}
-                                    className="w-full appearance-none bg-white border-2 border-gray-300 rounded-lg px-4 py-2 pr-10 focus:border-green-500 focus:outline-none text-sm"
+                                    className="w-full appearance-none bg-white border-2 border-gray-300 rounded-lg px-4 py-2 pr-10 focus:border-green-500 focus:outline-none text-sm font-poppins"
                                 >
                                     {suratList.map((surat) => (
                                         <option key={surat.nomor} value={surat.nomor}>
@@ -216,13 +256,13 @@ export default function QuranPage() {
 
                         {/* Reader Selection */}
                         <div className="lg:col-span-2">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 font-poppins">
                                 Reader
                             </label>
                             <select
                                 value={selectedReader}
                                 onChange={(e) => setSelectedReader(e.target.value)}
-                                className="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:border-green-500 focus:outline-none text-sm"
+                                className="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:border-green-500 focus:outline-none text-sm font-poppins"
                             >
                                 {Object.entries(readers).map(([key, name]) => (
                                     <option key={key} value={key}>{name}</option>
@@ -236,14 +276,14 @@ export default function QuranPage() {
                         <button
                             onClick={handlePrevSurat}
                             disabled={selectedSurat?.nomor === 1}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg font-medium transition-colors text-sm"
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg font-medium transition-colors text-sm font-poppins"
                         >
                             <ChevronLeft size={16} /> Previous Surah
                         </button>
                         <button
                             onClick={handleNextSurat}
                             disabled={selectedSurat?.nomor === 114}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg font-medium transition-colors text-sm"
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg font-medium transition-colors text-sm font-poppins"
                         >
                             Next Surah <ChevronRight size={16} />
                         </button>
@@ -251,7 +291,7 @@ export default function QuranPage() {
                         {selectedSurat?.audioFull && selectedSurat.audioFull[selectedReader] && (
                             <button
                                 onClick={playFullSurah}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors text-sm font-poppins ${
                                     isPlayingFullSurah
                                         ? 'bg-red-500 hover:bg-red-600 text-white'
                                         : 'bg-green-500 hover:bg-green-600 text-white'
@@ -285,30 +325,57 @@ export default function QuranPage() {
                     {/* Surat Info */}
                     {selectedSurat && (
                         <div className="pt-6 border-t border-gray-200">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm mb-4">
                                 <div>
-                                    <span className="text-gray-600 text-xs uppercase">Name</span>
-                                    <p className="font-semibold text-gray-800">{selectedSurat.namaLatin}</p>
+                                    <span className="text-gray-600 text-xs uppercase font-poppins">Name</span>
+                                    <p className="font-semibold text-gray-800 font-poppins">{selectedSurat.namaLatin}</p>
                                 </div>
                                 <div>
-                                    <span className="text-gray-600 text-xs uppercase">Arabic</span>
-                                    <p className="font-semibold text-xl text-gray-800">{selectedSurat.nama}</p>
+                                    <span className="text-gray-600 text-xs uppercase font-poppins">Arabic</span>
+                                    <p className="font-semibold text-xl text-gray-800 font-arabic">{selectedSurat.nama}</p>
                                 </div>
                                 <div>
-                                    <span className="text-gray-600 text-xs uppercase">Meaning</span>
-                                    <p className="font-semibold text-gray-800">{selectedSurat.arti}</p>
+                                    <span className="text-gray-600 text-xs uppercase font-poppins">Meaning</span>
+                                    <p className="font-semibold text-gray-800 font-poppins">{selectedSurat.arti}</p>
                                 </div>
                                 <div>
-                                    <span className="text-gray-600 text-xs uppercase">Verses</span>
-                                    <p className="font-semibold text-gray-800">{selectedSurat.jumlahAyat}</p>
+                                    <span className="text-gray-600 text-xs uppercase font-poppins">Verses</span>
+                                    <p className="font-semibold text-gray-800 font-poppins">{selectedSurat.jumlahAyat}</p>
+                                </div>
+                                <div>
+                                    <span className="text-gray-600 text-xs uppercase font-poppins">Repeat</span>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={() => setRepeatCount(Math.max(1, repeatCount - 1))}
+                                            className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs font-poppins"
+                                        >
+                                            −
+                                        </button>
+                                        <span className="font-semibold text-gray-800 min-w-6 text-center font-poppins">{repeatCount}</span>
+                                        <button
+                                            onClick={() => setRepeatCount(Math.min(10, repeatCount + 1))}
+                                            className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs font-poppins"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <p className="text-xs text-gray-600">
+                            <p className="font-poppins text-xs text-gray-600">
                                 Page {currentPage} of {totalPages} • Showing verses {(currentPage - 1) * versesPerPage + 1}-{Math.min(currentPage * versesPerPage, selectedSurat.jumlahAyat)}
                             </p>
                         </div>
                     )}
+                     
                 </div>
+                {selectedSurat?.deskripsi && (
+                    <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 mt-4">
+                        <span className="text-gray-600 text-xs uppercase font-poppins">Deskripsi Surat</span>
+                        <p className="font-poppins text-sm text-gray-700 leading-relaxed">
+                            {selectedSurat.deskripsi}
+                        </p>
+                    </div>
+                )}
             </div>
 
             {/* Verses Display - Scrollable Only */}
@@ -316,12 +383,13 @@ export default function QuranPage() {
                 <div className="max-w-7xl mx-auto px-4 py-8">
                     {loadingAyat ? (
                         <div className="text-center text-gray-600 py-12">
-                            <p>Loading verses...</p>
+                            <p className="font-poppins">Loading verses...</p>
                         </div>
                     ) : displayedAyat.length > 0 ? (
                         <div className="space-y-4">
                             {displayedAyat.map((ayat) => {
                                 const isBookmarked = bookmarks.includes(`${selectedSurat?.nomor}-${ayat.nomorAyat}`)
+                                const isPlaying = playingAyat === `${selectedSurat?.nomor}-${ayat.nomorAyat}`
 
                                 return (
                                     <div
@@ -334,11 +402,31 @@ export default function QuranPage() {
                                                 <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-green-600 text-white font-semibold text-sm flex-shrink-0">
                                                     {ayat.nomorAyat}
                                                 </span>
-                                                <span className="text-xs text-gray-500">
+                                                <span className="text-xs text-gray-500 font-poppins">
                                                     {selectedSurat?.namaLatin} {ayat.nomorAyat}
                                                 </span>
                                             </div>
                                             <div className="flex items-center gap-2">
+                                                {ayat.audio && ayat.audio[selectedReader] && (
+                                                    <div className="flex items-center gap-1">
+                                                        <button
+                                                            onClick={() => playAyahAudio(ayat)}
+                                                            className={`p-2 rounded-lg transition-colors ${
+                                                                isPlaying
+                                                                    ? 'bg-green-100 text-green-600'
+                                                                    : 'hover:bg-gray-100 text-gray-600'
+                                                            }`}
+                                                            title="Play verse audio"
+                                                        >
+                                                            <Volume2 size={18} fill={isPlaying ? 'currentColor' : 'none'} />
+                                                        </button>
+                                                        {isPlaying && (
+                                                            <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded font-poppins">
+                                                                {currentRepeat}/{repeatCount}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
                                                 <button
                                                     onClick={() => toggleBookmark(ayat)}
                                                     className={`p-2 rounded-lg transition-colors ${
@@ -362,26 +450,26 @@ export default function QuranPage() {
 
                                         {/* Arabic Text */}
                                         <div className="mb-4 p-4 bg-gradient-to-l from-green-50 to-transparent rounded-lg">
-                                            <p className="text-2xl md:text-3xl leading-relaxed text-right text-gray-800 font-semibold">
+                                            <p className="font-arabic text-2xl md:text-3xl leading-relaxed text-right text-gray-800">
                                                 {ayat.teksArab}
                                             </p>
                                         </div>
 
                                         {/* Latin Transliteration */}
-                                        <p className="text-sm text-gray-600 italic mb-3 leading-relaxed">
+                                        <p className="font-poppins text-sm text-gray-600 italic mb-3 leading-relaxed">
                                             {ayat.teksLatin}
                                         </p>
 
                                         {/* Translation */}
                                         <div className="bg-blue-50 p-4 rounded-lg">
-                                            <p className="text-gray-700 leading-relaxed">
+                                            <p className="font-poppins text-gray-700 leading-relaxed">
                                                 {ayat.teksIndonesia}
                                             </p>
                                         </div>
 
                                         {/* Copy Feedback */}
                                         {copyFeedback === ayat.nomorAyat && (
-                                            <div className="mt-3 text-xs text-green-600 font-medium">
+                                            <div className="mt-3 text-xs text-green-600 font-medium font-poppins">
                                                 ✓ Copied to clipboard
                                             </div>
                                         )}
@@ -391,7 +479,7 @@ export default function QuranPage() {
                         </div>
                     ) : (
                         <div className="bg-white rounded-lg shadow-md p-12 text-center text-gray-600">
-                            <p>No verses found for the selected range.</p>
+                            <p className="font-poppins">No verses found for the selected range.</p>
                         </div>
                     )}
 
@@ -401,7 +489,7 @@ export default function QuranPage() {
                             <button
                                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                                 disabled={currentPage === 1}
-                                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg text-sm"
+                                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg text-sm font-poppins"
                             >
                                 ← Previous
                             </button>
@@ -410,7 +498,7 @@ export default function QuranPage() {
                                 <button
                                     key={page}
                                     onClick={() => setCurrentPage(page)}
-                                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors font-poppins ${
                                         currentPage === page
                                             ? 'bg-green-600 text-white'
                                             : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-green-500'
@@ -423,7 +511,7 @@ export default function QuranPage() {
                             <button
                                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                 disabled={currentPage === totalPages}
-                                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg text-sm"
+                                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg text-sm font-poppins"
                             >
                                 Next →
                             </button>
@@ -433,7 +521,7 @@ export default function QuranPage() {
                     {/* Bookmarks Summary */}
                     {bookmarks.length > 0 && (
                         <div className="mt-8 bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
-                            <p className="text-sm font-semibold text-yellow-800">
+                            <p className="text-sm font-semibold text-yellow-800 font-poppins">
                                 📌 {bookmarks.length} verse{bookmarks.length !== 1 ? 's' : ''} bookmarked
                             </p>
                         </div>
