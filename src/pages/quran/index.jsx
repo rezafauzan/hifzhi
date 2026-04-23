@@ -14,7 +14,6 @@ export default function QuranPage() {
     const [currentPage, setCurrentPage] = useState(1)
     const [isPlayingFullSurah, setIsPlayingFullSurah] = useState(false)
     const [audioProgress, setAudioProgress] = useState(0)
-    const [repeatCount, setRepeatCount] = useState(1)
     const [currentRepeat, setCurrentRepeat] = useState(0)
     const [isPanelHidden, setIsPanelHidden] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")
@@ -547,18 +546,6 @@ export default function QuranPage() {
                                             {size.toUpperCase()}
                                         </button>
                                     ))}
-                                </div>
-                            </div>
-                            <div>
-                                <label className={`text-xs font-serif font-bold ${t.label} mb-2 block`}>Repeat Count</label>
-                                <div className="flex items-center gap-3">
-                                    <button onClick={() => setRepeatCount(Math.max(1, repeatCount - 1))} className={`p-1 rounded transition ${t.settingsBtnInactive}`}>
-                                        <ChevronLeft size={16} />
-                                    </button>
-                                    <span className={`font-serif font-bold ${t.infoValue} w-8 text-center`}>{repeatCount}</span>
-                                    <button onClick={() => setRepeatCount(Math.min(10, repeatCount + 1))} className={`p-1 rounded transition ${t.settingsBtnInactive}`}>
-                                        <ChevronRight size={16} />
-                                    </button>
                                 </div>
                             </div>
                             <div>
