@@ -1,6 +1,5 @@
-
 import { useState, useRef, useEffect } from 'react'
-import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, Bookmark, Copy, Volume2, Pause, Play, Search, Settings, X, RotateCcw, Moon, Sun } from 'lucide-react'
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, Bookmark, Copy, Volume2, Pause, Play, Search, Settings, X, RotateCcw, Moon, Sun, Sparkles, Loader2 } from 'lucide-react'
 
 export default function QuranPage() {
     const [suratList, setSuratList] = useState([])
@@ -22,6 +21,14 @@ export default function QuranPage() {
     const [showSettings, setShowSettings] = useState(false)
     const [fontSize, setFontSize] = useState('lg')
     const [darkMode, setDarkMode] = useState(false)
+    
+    // Vector Search States
+    const [showVectorSearch, setShowVectorSearch] = useState(false)
+    const [vectorQuery, setVectorQuery] = useState("")
+    const [vectorResults, setVectorResults] = useState([])
+    const [isVectorSearching, setIsVectorSearching] = useState(false)
+    const [vectorError, setVectorError] = useState(null)
+
     const audioRef = useRef(null)
     const versesPerPage = 10
 
@@ -283,6 +290,43 @@ export default function QuranPage() {
         setTimeout(() => setCopyFeedback(null), 2000)
     }
 
+    const handleVectorSearch = async () => {
+        if (!vectorQuery.trim()) return
+        setIsVectorSearching(true)
+        setVectorError(null)
+        try {
+            const response = await fetch("https://equran.id/api/vector", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    cari: vectorQuery,
+                    batas: 5,
+                    tipe: ["ayat"],
+                    skorMin: 0.5
+                })
+            })
+            const data = await response.json()
+            // Map the explicit API response structure
+            if (data && data.status === "sukses" && Array.isArray(data.hasil)) {
+                setVectorResults(data.hasil)
+            } else if (data && data.data) {
+                setVectorResults(data.data)
+            } else if (Array.isArray(data)) {
+                setVectorResults(data)
+            } else {
+                setVectorResults([])
+            }
+        } catch (error) {
+            console.error("Vector search error:", error)
+            setVectorError("Terjadi kesalahan saat mencari. Silakan coba lagi.")
+            setVectorResults([])
+        } finally {
+            setIsVectorSearching(false)
+        }
+    }
+
     const getDisplayedAyat = () => {
         const start = (currentPage - 1) * versesPerPage
         const end = start + versesPerPage
@@ -332,6 +376,13 @@ export default function QuranPage() {
                                 <p className={`${t.headerSub} text-xs`}>of 114</p>
                             </div>
                             <button
+                                onClick={() => setShowVectorSearch(true)}
+                                className={`p-2 ${t.headerBtnHover} rounded-lg transition-all`}
+                                title="Pencarian Semantik (Vector Search)"
+                            >
+                                <Sparkles size={20} className={t.headerText} />
+                            </button>
+                            <button
                                 onClick={() => setDarkMode(!darkMode)}
                                 className={`p-2 ${t.headerBtnHover} rounded-lg transition-all`}
                                 title={darkMode ? "Light mode" : "Dark mode"}
@@ -360,6 +411,116 @@ export default function QuranPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Vector Search Overlay */}
+            {showVectorSearch && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
+                    <div className={`${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-amber-200'} border-2 rounded-xl shadow-2xl w-full max-w-3xl h-[85vh] sm:max-h-[90vh] flex flex-col overflow-hidden transition-colors`}>
+                        {/* Header */}
+                        <div className={`p-4 border-b ${darkMode ? 'border-gray-800 bg-gray-900' : 'border-amber-100 bg-amber-50'} flex items-center justify-between`}>
+                            <div className="flex items-center gap-2">
+                                <Sparkles className={darkMode ? "text-amber-400" : "text-amber-600"} size={20} />
+                                <h3 className={`font-serif font-bold ${darkMode ? 'text-amber-200' : 'text-amber-900'} text-lg`}>Pencarian Pintar (Semantic Vector)</h3>
+                            </div>
+                            <button onClick={() => setShowVectorSearch(false)} className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                        {/* Input Form */}
+                        <div className={`p-4 border-b ${darkMode ? 'border-gray-800' : 'border-amber-100'}`}>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <input 
+                                    type="text" 
+                                    value={vectorQuery}
+                                    onChange={e => setVectorQuery(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && handleVectorSearch()}
+                                    placeholder="Cari ayat tentang makna, topik, atau kalimat..." 
+                                    className={`flex-1 rounded-lg px-4 py-2.5 focus:outline-none transition-colors text-sm sm:text-base ${darkMode ? 'bg-gray-800 border-2 border-gray-700 text-amber-100 focus:border-amber-600' : 'bg-white border-2 border-amber-200 text-gray-900 focus:border-amber-600'}`}
+                                />
+                                <button 
+                                    onClick={handleVectorSearch}
+                                    disabled={isVectorSearching || !vectorQuery.trim()}
+                                    className={`px-6 py-2.5 rounded-lg font-serif font-bold text-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2 ${darkMode ? 'bg-amber-700 hover:bg-amber-600' : 'bg-amber-600 hover:bg-amber-700'}`}
+                                >
+                                    {isVectorSearching ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} />}
+                                    Cari
+                                </button>
+                            </div>
+                        </div>
+                        {/* Results */}
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                            {isVectorSearching && (
+                                <div className="text-center py-12">
+                                    <Loader2 size={40} className={`mx-auto mb-4 animate-spin ${darkMode ? 'text-amber-500' : 'text-amber-600'}`} />
+                                    <p className={`font-serif text-lg ${darkMode ? 'text-amber-200' : 'text-amber-800'}`}>Mencari makna dan konteks...</p>
+                                </div>
+                            )}
+                            {!isVectorSearching && vectorError && (
+                                <div className={`p-4 rounded-lg text-center ${darkMode ? 'bg-red-900/30 text-red-400 border border-red-900/50' : 'bg-red-50 text-red-600 border border-red-200'}`}>
+                                    {vectorError}
+                                </div>
+                            )}
+                            {!isVectorSearching && !vectorError && vectorResults.length === 0 && vectorQuery && (
+                                <div className={`text-center py-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'} font-serif`}>
+                                    Belum ada hasil pencarian. Coba kalimat lain yang relevan.
+                                </div>
+                            )}
+                            {!isVectorSearching && !vectorError && vectorResults.map((result, idx) => {
+                                const d = result.data || {};
+                                
+                                const arab = d.teks_arab || result.teksArab || "";
+                                const indo = d.terjemahan_id || result.teksIndonesia || "";
+                                const surahNo = d.id_surat || result.suratNomor || 1;
+                                const ayatNo = d.nomor_ayat || result.nomorAyat || "";
+                                const suratNama = d.nama_surat || result.namaLatin || `Surah ${surahNo}`;
+                                const score = result.skor || 0;
+                                const relevansi = result.relevansi || "";
+
+                                return (
+                                    <div key={idx} className={`p-4 sm:p-5 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700 hover:border-amber-700/50 shadow-md shadow-black/20' : 'bg-white border-amber-200 hover:border-amber-400 shadow-sm'} transition-colors relative overflow-hidden group`}>
+                                        <div className="flex justify-between items-start mb-4 gap-4">
+                                            <div className="flex-1">
+                                                <div className={`font-serif font-bold text-sm sm:text-base ${darkMode ? 'text-amber-400' : 'text-amber-700'}`}>
+                                                    {suratNama} : Ayat {ayatNo}
+                                                </div>
+                                                <div className="flex items-center gap-2 mt-1.5">
+                                                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${darkMode ? 'bg-amber-900/40 text-amber-400 border border-amber-700/50' : 'bg-amber-100 text-amber-700 border border-amber-200'}`}>
+                                                        Skor: {(score * 100).toFixed(1)}%
+                                                    </span>
+                                                    {relevansi && (
+                                                        <span className={`text-xs px-2 py-0.5 rounded-full capitalize font-semibold ${darkMode ? 'bg-gray-800 text-emerald-400 border border-emerald-900/50' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                                                            {relevansi}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => {
+                                                    setShowVectorSearch(false)
+                                                    handleSuratChange(parseInt(surahNo))
+                                                }}
+                                                className={`flex-shrink-0 px-3 py-1.5 text-xs font-serif font-bold rounded-md transition-colors ${darkMode ? 'bg-amber-900/50 text-amber-300 hover:bg-amber-900' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}`}
+                                            >
+                                                Buka Surah
+                                            </button>
+                                        </div>
+                                        {arab && (
+                                            <p className={`font-arabic text-xl sm:text-2xl text-right mb-4 ${darkMode ? 'text-amber-50' : 'text-stone-900'} leading-loose tracking-wide`}>
+                                                {arab}
+                                            </p>
+                                        )}
+                                        {indo && (
+                                            <p className={`font-serif text-sm ${darkMode ? 'text-emerald-200/90' : 'text-gray-700'} leading-relaxed text-justify`}>
+                                                {indo}
+                                            </p>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Settings Panel */}
             {showSettings && (
