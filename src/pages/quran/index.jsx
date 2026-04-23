@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, Bookmark, Copy, Volume2, Pause, Play, Search, Settings, X, RotateCcw, Moon, Sun, Sparkles, Loader2 } from 'lucide-react'
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, Bookmark, Copy, Volume2, Pause, Play, Search, Settings, X, RotateCcw, Moon, Sun, Sparkles, Loader2, BookMarked } from 'lucide-react'
 
 export default function QuranPage() {
     const [suratList, setSuratList] = useState([])
@@ -21,6 +21,13 @@ export default function QuranPage() {
     const [fontSize, setFontSize] = useState('lg')
     const [darkMode, setDarkMode] = useState(false)
     
+    // Tafsir States
+    const [tafsirData, setTafsirData] = useState({})
+    const [loadingTafsir, setLoadingTafsir] = useState(false)
+    const [showTafsirModal, setShowTafsirModal] = useState(false)
+    const [selectedTafsirAyat, setSelectedTafsirAyat] = useState(null)
+    const [tafsirSuratCache, setTafsirSuratCache] = useState({})
+
     // Vector Search States
     const [showVectorSearch, setShowVectorSearch] = useState(false)
     const [vectorQuery, setVectorQuery] = useState("")
@@ -48,6 +55,33 @@ export default function QuranPage() {
     }
 
     // Dark mode theme classes
+    // Tafsir theme
+    const tafsirTheme = darkMode ? {
+        modalBg: 'bg-gray-900 border-gray-700',
+        header: 'border-gray-800 bg-gray-900',
+        title: 'text-amber-200',
+        icon: 'text-emerald-400',
+        body: 'bg-gray-800/60 border-gray-700',
+        surahLabel: 'text-amber-400',
+        teksLabel: 'text-emerald-400',
+        teks: 'text-gray-200',
+        close: 'text-gray-400 hover:text-white',
+        loading: 'text-amber-300',
+        empty: 'text-gray-500',
+    } : {
+        modalBg: 'bg-white border-emerald-200',
+        header: 'border-emerald-100 bg-emerald-50',
+        title: 'text-emerald-900',
+        icon: 'text-emerald-600',
+        body: 'bg-emerald-50 border-emerald-200',
+        surahLabel: 'text-amber-800',
+        teksLabel: 'text-emerald-800',
+        teks: 'text-gray-800',
+        close: 'text-gray-500 hover:text-gray-900',
+        loading: 'text-emerald-700',
+        empty: 'text-gray-400',
+    }
+
     const t = darkMode ? {
         bg: 'bg-gradient-to-br from-gray-950 via-gray-900 to-stone-950',
         header: 'bg-gradient-to-r from-gray-900 via-stone-900 to-gray-900 border-b border-amber-900/30',
@@ -289,6 +323,36 @@ export default function QuranPage() {
         setTimeout(() => setCopyFeedback(null), 2000)
     }
 
+    const fetchTafsir = async (suratNomor) => {
+        if (tafsirSuratCache[suratNomor]) {
+            return tafsirSuratCache[suratNomor]
+        }
+        setLoadingTafsir(true)
+        try {
+            const response = await fetch(`https://equran.id/api/v2/tafsir/${suratNomor}`)
+            const data = await response.json()
+            const tafsirList = data.data?.tafsir || []
+            // Index by ayat number for quick lookup
+            const indexed = {}
+            tafsirList.forEach(t => { indexed[t.ayat] = t.teks })
+            setTafsirSuratCache(prev => ({ ...prev, [suratNomor]: indexed }))
+            return indexed
+        } catch (error) {
+            console.error("Error fetching tafsir:", error)
+            return {}
+        } finally {
+            setLoadingTafsir(false)
+        }
+    }
+
+    const handleShowTafsir = async (ayat) => {
+        setSelectedTafsirAyat(ayat)
+        setShowTafsirModal(true)
+        if (!tafsirSuratCache[selectedSurat?.nomor]) {
+            await fetchTafsir(selectedSurat?.nomor)
+        }
+    }
+
     const handleVectorSearch = async () => {
         if (!vectorQuery.trim()) return
         setIsVectorSearching(true)
@@ -410,6 +474,71 @@ export default function QuranPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Tafsir Modal */}
+            {showTafsirModal && selectedTafsirAyat && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm">
+                    <div className={`${tafsirTheme.modalBg} border-2 rounded-xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden transition-colors`}>
+                        {/* Header */}
+                        <div className={`p-4 border-b ${tafsirTheme.header} flex items-center justify-between`}>
+                            <div className="flex items-center gap-2">
+                                <BookMarked className={tafsirTheme.icon} size={20} />
+                                <h3 className={`font-serif font-bold ${tafsirTheme.title} text-lg`}>Tafsir Ayat</h3>
+                            </div>
+                            <button onClick={() => setShowTafsirModal(false)} className={tafsirTheme.close}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                        {/* Content */}
+                        <div className="flex-1 overflow-y-auto p-4 sm:p-5">
+                            <div className={`mb-4 p-3 rounded-lg border ${tafsirTheme.body}`}>
+                                <p className={`text-xs font-serif font-bold uppercase tracking-widest ${tafsirTheme.surahLabel} mb-1`}>
+                                    {selectedSurat?.namaLatin} — Ayat {selectedTafsirAyat.nomorAyat}
+                                </p>
+                                <p className={`font-arabic text-2xl text-right leading-loose ${darkMode ? 'text-amber-50' : 'text-stone-900'}`}>
+                                    {selectedTafsirAyat.teksArab}
+                                </p>
+                            </div>
+                            {loadingTafsir ? (
+                                <div className="text-center py-10">
+                                    <Loader2 size={32} className={`mx-auto mb-3 animate-spin ${tafsirTheme.loading}`} />
+                                    <p className={`font-serif text-sm ${tafsirTheme.loading}`}>Memuat tafsir...</p>
+                                </div>
+                            ) : (
+                                <div>
+                                    <p className={`text-xs font-serif font-bold uppercase tracking-widest ${tafsirTheme.teksLabel} mb-3`}>Tafsir Kemenag</p>
+                                    <p className={`font-serif text-sm ${tafsirTheme.teks} leading-relaxed text-justify whitespace-pre-line`}>
+                                        {tafsirSuratCache[selectedSurat?.nomor]?.[selectedTafsirAyat.nomorAyat] || 'Tafsir tidak tersedia untuk ayat ini.'}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        {/* Navigation between ayats */}
+                        <div className={`p-3 border-t ${darkMode ? 'border-gray-800' : 'border-emerald-100'} flex justify-between gap-2`}>
+                            <button
+                                onClick={() => {
+                                    const idx = ayatList.findIndex(a => a.nomorAyat === selectedTafsirAyat.nomorAyat)
+                                    if (idx > 0) setSelectedTafsirAyat(ayatList[idx - 1])
+                                }}
+                                disabled={selectedTafsirAyat.nomorAyat === 1}
+                                className={`px-4 py-1.5 rounded-lg text-xs font-serif font-bold transition-all disabled:opacity-40 ${darkMode ? 'bg-gray-800 text-amber-300 hover:bg-gray-700' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}`}
+                            >
+                                ← Ayat Sebelumnya
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const idx = ayatList.findIndex(a => a.nomorAyat === selectedTafsirAyat.nomorAyat)
+                                    if (idx < ayatList.length - 1) setSelectedTafsirAyat(ayatList[idx + 1])
+                                }}
+                                disabled={selectedTafsirAyat.nomorAyat === selectedSurat?.jumlahAyat}
+                                className={`px-4 py-1.5 rounded-lg text-xs font-serif font-bold transition-all disabled:opacity-40 ${darkMode ? 'bg-gray-800 text-amber-300 hover:bg-gray-700' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}`}
+                            >
+                                Ayat Berikutnya →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Vector Search Overlay */}
             {showVectorSearch && (
@@ -703,6 +832,9 @@ export default function QuranPage() {
                                                 </button>
                                                 <button onClick={() => copyToClipboard(ayat.teksArab, ayat.nomorAyat)} className={`p-1.5 sm:p-2 rounded-lg transition-all hover:scale-105 ${t.verseCopyBtn}`} title="Copy text">
                                                     <Copy size={18} />
+                                                </button>
+                                                <button onClick={() => handleShowTafsir(ayat)} className={`p-1.5 sm:p-2 rounded-lg transition-all hover:scale-105 ${darkMode ? 'hover:bg-gray-800 text-emerald-500' : 'hover:bg-emerald-50 text-emerald-600'}`} title="Lihat Tafsir">
+                                                    <BookMarked size={18} />
                                                 </button>
                                             </div>
                                         </div>
