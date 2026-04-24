@@ -12,7 +12,7 @@ export default function Dashboard() {
                 <div className="p-6 border-b border-gray-200">
                     <div className="text-sm font-bold text-gray-800">PPIQU Doplang</div>
                     <div className="text-sm font-bold text-gray-800">Adipala-Cilacap</div>
-                    <div className="text-xs text-gray-500 mt-1">Tanif System</div>
+                    <div className="text-xs text-gray-500 mt-1">Tahfidz System</div>
                 </div>
 
                 <nav className="mt-6">
@@ -97,7 +97,7 @@ export default function Dashboard() {
                             {/* Exam Configuration */}
                             <div className="bg-white rounded-lg p-6 shadow-sm">
                                 <h3 className="font-semibold text-gray-800 mb-6 flex items-center gap-2">
-                  ⚙️ Konfigurasi Ujian
+                  Konfigurasi Ujian
                                 </h3>
                                 <div className="space-y-4">
                                     <div>
