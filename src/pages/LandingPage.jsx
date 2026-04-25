@@ -1,3 +1,4 @@
+import { FaQuoteLeft } from "react-icons/fa"; 
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { FiBookOpen } from "react-icons/fi";
@@ -172,6 +173,51 @@ function LandingPageAbout() {
     )
 }
 
+function LandingPageTestimonial() {
+    return (
+        <section section id="testimonials" className="py-24 lg:py-32 bg-white" >
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="text-center max-w-2xl mx-auto mb-16 lg:mb-20">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary tracking-tight">
+                        Lorem Ipsum
+                    </h2>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
+                    {testimonials.map((testimonial, index) => (
+                        <div key={index} id={`testimonial-card-${index + 1}`} className="bg-surface-muted rounded-2xl p-8 lg:p-10 border border-border-light hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full" >
+                            <div>
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className={`w-10 h-10 ${testimonial.avatarBg} text-white rounded-xl flex items-center justify-center shadow-md`}>
+                                        <FaQuoteLeft className="w-5 h-5" />
+                                    </div>
+                                </div>
+
+                                <p className="text-text-secondary text-base lg:text-lg leading-relaxed mb-8 font-medium">
+                                    &ldquo;{testimonial.quote}&rdquo;
+                                </p>
+                            </div>
+
+                            <div className="flex items-center gap-4 border-t border-border pt-6">
+                                <div className={`w-12 h-12 ${testimonial.avatarBg} text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm`}>
+                                    {testimonial.avatarInitial}
+                                </div>
+                                <div>
+                                    <p className="text-base font-bold text-text-primary">
+                                        {testimonial.name}
+                                    </p>
+                                    <p className="text-sm text-text-muted font-medium">
+                                        {testimonial.role}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section >
+    )
+}
 
 export default function LandingPage() {
     return (
@@ -181,59 +227,7 @@ export default function LandingPage() {
                 <LandingPageHero />
                 <LandingPageFeature />
                 <LandingPageAbout />
-
-                {/* --- TESTIMONIALS SECTION --- */}
-                <section id="testimonials" className="py-24 lg:py-32 bg-white">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        {/* Section Header */}
-                        <div className="text-center max-w-2xl mx-auto mb-16 lg:mb-20">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary tracking-tight">
-                                Lorem Ipsum
-                            </h2>
-                        </div>
-
-                        {/* Testimonials Grid */}
-                        <div className="grid md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
-                            {testimonials.map((testimonial, index) => (
-                                <div
-                                    key={index}
-                                    id={`testimonial-card-${index + 1}`}
-                                    className="bg-surface-muted rounded-2xl p-8 lg:p-10 border border-border-light hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full"
-                                >
-                                    <div>
-                                        {/* Quote Icon */}
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <div className={`w-10 h-10 ${testimonial.avatarBg} text-white rounded-xl flex items-center justify-center shadow-md`}>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        <p className="text-text-secondary text-base lg:text-lg leading-relaxed mb-8 font-medium">
-                                            &ldquo;{testimonial.quote}&rdquo;
-                                        </p>
-                                    </div>
-
-                                    {/* Author */}
-                                    <div className="flex items-center gap-4 border-t border-border pt-6">
-                                        <div className={`w-12 h-12 ${testimonial.avatarBg} text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm`}>
-                                            {testimonial.avatarInitial}
-                                        </div>
-                                        <div>
-                                            <p className="text-base font-bold text-text-primary">
-                                                {testimonial.name}
-                                            </p>
-                                            <p className="text-sm text-text-muted font-medium">
-                                                {testimonial.role}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                <LandingPageTestimonial />
             </main>
             <Footer />
         </div>
