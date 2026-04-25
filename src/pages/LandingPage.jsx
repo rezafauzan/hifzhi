@@ -1,6 +1,6 @@
-import { HiOutlineLightBulb } from "react-icons/hi"; 
-import { HiOutlineOfficeBuilding } from "react-icons/hi"; 
-import { FiBookOpen } from "react-icons/fi"; 
+import { HiOutlineLightBulb } from "react-icons/hi";
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
+import { FiBookOpen } from "react-icons/fi";
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import heroStudentsImg from '../assets/images/hero-students.png'
@@ -138,6 +138,41 @@ function LandingPageFeature() {
     )
 }
 
+function LandingPageAbout() {
+    return (
+        <section id="about" className="py-24 lg:py-32 bg-surface-muted overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                    <div className="relative">
+                        <div className="rounded-2xl overflow-hidden shadow-2xl">
+                            <img src={libraryImg} alt="Beautiful classic library interior" className="w-full h-auto object-cover aspect-4/5" />
+                        </div>
+                        <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+                    </div>
+
+                    <div className="flex flex-col justify-center">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary tracking-tight mb-2">
+                            Lorem Ipsum
+                        </h2>
+                        <h3 className="text-xl lg:text-2xl font-semibold text-accent mb-8">
+                            Dolor Sit Amet
+                        </h3>
+                        <div className="space-y-6 text-base lg:text-lg text-text-secondary leading-relaxed">
+                            <p>
+                                Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus.
+                            </p>
+                            <p>
+                                Nequs porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+
 export default function LandingPage() {
     return (
         <div className="min-h-screen">
@@ -145,46 +180,7 @@ export default function LandingPage() {
             <main>
                 <LandingPageHero />
                 <LandingPageFeature />
-
-
-
-                {/* --- ABOUT SECTION --- */}
-                <section id="about" className="py-24 lg:py-32 bg-surface-muted overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-                            {/* Left Image */}
-                            <div className="relative">
-                                <div className="rounded-2xl overflow-hidden shadow-2xl">
-                                    <img
-                                        src={libraryImg}
-                                        alt="Beautiful classic library interior"
-                                        className="w-full h-auto object-cover aspect-4/5"
-                                    />
-                                </div>
-                                {/* Decorative elements */}
-                                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
-                            </div>
-
-                            {/* Right Content */}
-                            <div className="flex flex-col justify-center">
-                                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary tracking-tight mb-2">
-                                    Lorem Ipsum
-                                </h2>
-                                <h3 className="text-xl lg:text-2xl font-semibold text-accent mb-8">
-                                    Dolor Sit Amet
-                                </h3>
-                                <div className="space-y-6 text-base lg:text-lg text-text-secondary leading-relaxed">
-                                    <p>
-                                        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus.
-                                    </p>
-                                    <p>
-                                        Nequs porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <LandingPageAbout />
 
                 {/* --- TESTIMONIALS SECTION --- */}
                 <section id="testimonials" className="py-24 lg:py-32 bg-white">
