@@ -101,9 +101,9 @@ export default function LandingPage() {
                                     <img
                                         src={heroStudentsImg}
                                         alt="Students collaborating on campus"
-                                        className="w-full h-auto object-cover aspect-[4/3]"
+                                        className="w-full h-auto object-cover aspect-4/3"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
                                 </div>
                                 {/* Decorative elements */}
                                 <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-full blur-xl" />
@@ -189,13 +189,13 @@ export default function LandingPage() {
                             </div>
 
                             {/* Image Card - Bottom Right */}
-                            <div className="relative rounded-2xl overflow-hidden shadow-xl h-full min-h-[300px]">
+                            <div className="relative rounded-2xl overflow-hidden shadow-xl h-full min-h-75">
                                 <img
                                     src={digitalGlobeImg}
                                     alt="Digital globe technology visualization"
                                     className="w-full h-full object-cover"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@ export default function LandingPage() {
                                     <img
                                         src={libraryImg}
                                         alt="Beautiful classic library interior"
-                                        className="w-full h-auto object-cover aspect-[4/5]"
+                                        className="w-full h-auto object-cover aspect-4/5"
                                     />
                                 </div>
                                 {/* Decorative elements */}
