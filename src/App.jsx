@@ -5,7 +5,7 @@ import {
 
 import LandingPage from "./pages/LandingPage"
 import Login from "./pages/auth/Login"
-import Dashboard from "./pages/Dashboard/Dashboard"
+import Dashboard from "./pages/dashboard/Dashboard"
 import Quran from "./pages/quran/index"
 
 const router = createBrowserRouter([
