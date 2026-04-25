@@ -97,101 +97,59 @@ function LandingPageHero() {
     )
 }
 
+function LandingPageFeature() {
+    return (
+        <section id="features" className="py-24 lg:py-32 bg-white">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="text-center max-w-2xl mx-auto mb-16">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-primary tracking-tight">
+                        Lorem Ipsum
+                    </h2>
+                    <p className="mt-4 text-base text-text-secondary leading-relaxed">
+                        Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
+                    {features.map((feature, index) => (
+                        <div key={index} id={`feature-card-${index + 1}`} className="group relative bg-white rounded-2xl border border-border-light p-10 hover:shadow-xl transition-all duration-300 flex flex-col h-full" >
+                            <div className="flex items-start gap-5">
+                                <div className="flex-1">
+                                    <div className={`w-12 h-12 ${feature.iconBg} text-white rounded-xl flex items-center justify-center mb-6`} >
+                                        {feature.icon}
+                                    </div>
+
+                                    <h3 className="text-2xl font-bold text-text-primary mb-3">
+                                        {feature.title}
+                                    </h3>
+
+                                    <p className="text-text-secondary text-base leading-relaxed">
+                                        {feature.description}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    <div className="relative rounded-2xl overflow-hidden shadow-xl h-full min-h-75">
+                        <img src={digitalGlobeImg} alt="Digital globe technology visualization" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
 export default function LandingPage() {
     return (
         <div className="min-h-screen">
             <Navbar />
             <main>
                 <LandingPageHero />
+                <LandingPageFeature />
 
 
-                {/* --- FEATURES SECTION --- */}
-                <section id="features" className="py-24 lg:py-32 bg-white">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        {/* Section Header */}
-                        <div className="text-center max-w-2xl mx-auto mb-16">
-                            <h2 className="text-3xl sm:text-4xl font-bold text-primary tracking-tight">
-                                Lorem Ipsum
-                            </h2>
-                            <p className="mt-4 text-base text-text-secondary leading-relaxed">
-                                Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            </p>
-                        </div>
-
-                        {/* Features Grid */}
-                        <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
-                            {/* Feature Card 1 - Top Left */}
-                            <div
-                                id="feature-card-1"
-                                className="group relative bg-white rounded-2xl border border-border-light p-10 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
-                            >
-                                <div className="flex items-start gap-5">
-                                    <div className="flex-1">
-                                        <div className={`w-12 h-12 ${features[0].iconBg} text-white rounded-xl flex items-center justify-center mb-6`}>
-                                            {features[0].icon}
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-text-primary mb-3">
-                                            {features[0].title}
-                                        </h3>
-                                        <p className="text-text-secondary text-base leading-relaxed">
-                                            {features[0].description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Feature Card 2 - Top Right */}
-                            <div
-                                id="feature-card-2"
-                                className="group relative bg-white rounded-2xl border border-border-light p-10 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
-                            >
-                                <div className="flex items-start gap-5">
-                                    <div className="flex-1">
-                                        <div className={`w-12 h-12 ${features[1].iconBg} text-white rounded-xl flex items-center justify-center mb-6`}>
-                                            {features[1].icon}
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-text-primary mb-3">
-                                            {features[1].title}
-                                        </h3>
-                                        <p className="text-text-secondary text-base leading-relaxed">
-                                            {features[1].description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Feature Card 3 - Bottom Left */}
-                            <div
-                                id="feature-card-3"
-                                className="group relative bg-white rounded-2xl border border-border-light p-10 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
-                            >
-                                <div className="flex items-start gap-5">
-                                    <div className="flex-1">
-                                        <div className={`w-12 h-12 ${features[2].iconBg} text-white rounded-xl flex items-center justify-center mb-6`}>
-                                            {features[2].icon}
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-text-primary mb-3">
-                                            {features[2].title}
-                                        </h3>
-                                        <p className="text-text-secondary text-base leading-relaxed">
-                                            {features[2].description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Image Card - Bottom Right */}
-                            <div className="relative rounded-2xl overflow-hidden shadow-xl h-full min-h-75">
-                                <img
-                                    src={digitalGlobeImg}
-                                    alt="Digital globe technology visualization"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
-                            </div>
-                        </div>
-                    </div>
-                </section>
 
                 {/* --- ABOUT SECTION --- */}
                 <section id="about" className="py-24 lg:py-32 bg-surface-muted overflow-hidden">
