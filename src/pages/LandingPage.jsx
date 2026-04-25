@@ -57,61 +57,53 @@ const testimonials = [
     },
 ]
 
+function LandingPageHero() {
+    return (
+        <section id="hero" className="relative pt-24 lg:pt-32 pb-20 lg:pb-28 bg-surface-muted overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                    <div className="animate-fade-in-up">
+                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-primary tracking-tight">
+                            Lorem ipsum dolor sit amet consectetur adipiscing elit
+                        </h1>
+                        <p className="mt-6 text-base lg:text-lg text-text-secondary leading-relaxed max-w-lg">
+                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </p>
+                        <div className="mt-10 flex flex-wrap gap-4">
+                            <a href="#features" id="hero-cta-primary" className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-white text-base font-semibold rounded-lg hover:bg-primary-dark transition-all duration-200 shadow-md hover:shadow-lg group" >
+                                Lorem Ipsum
+                                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                            <a href="#about" id="hero-cta-secondary" className="inline-flex items-center px-8 py-3.5 bg-primary-light text-primary text-base font-semibold rounded-lg hover:bg-primary hover:text-white transition-all duration-200 shadow-sm hover:shadow-md" >
+                                Dolor Sit Amet
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="animate-fade-in-up delay-200 relative">
+                        <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                            <img src={heroStudentsImg} alt="Students collaborating on campus" className="w-full h-auto object-cover aspect-4/3" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
+                        </div>
+
+                        <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-full blur-xl" />
+                        <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-accent-light/20 rounded-full blur-2xl" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
 export default function LandingPage() {
     return (
         <div className="min-h-screen">
             <Navbar />
             <main>
-                {/* --- HERO SECTION --- */}
-                <section id="hero" className="relative pt-24 lg:pt-32 pb-20 lg:pb-28 bg-surface-muted overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                            {/* Left Content */}
-                            <div className="animate-fade-in-up">
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-primary tracking-tight">
-                                    Lorem ipsum dolor sit amet consectetur adipiscing elit
-                                </h1>
-                                <p className="mt-6 text-base lg:text-lg text-text-secondary leading-relaxed max-w-lg">
-                                    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <div className="mt-10 flex flex-wrap gap-4">
-                                    <a
-                                        href="#features"
-                                        id="hero-cta-primary"
-                                        className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-white text-base font-semibold rounded-lg hover:bg-primary-dark transition-all duration-200 shadow-md hover:shadow-lg group"
-                                    >
-                                        Lorem Ipsum
-                                        <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                        </svg>
-                                    </a>
-                                    <a
-                                        href="#about"
-                                        id="hero-cta-secondary"
-                                        className="inline-flex items-center px-8 py-3.5 bg-primary-light text-primary text-base font-semibold rounded-lg hover:bg-primary hover:text-white transition-all duration-200 shadow-sm hover:shadow-md"
-                                    >
-                                        Dolor Sit Amet
-                                    </a>
-                                </div>
-                            </div>
+                <LandingPageHero />
 
-                            {/* Right Image */}
-                            <div className="animate-fade-in-up delay-200 relative">
-                                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                                    <img
-                                        src={heroStudentsImg}
-                                        alt="Students collaborating on campus"
-                                        className="w-full h-auto object-cover aspect-4/3"
-                                    />
-                                    <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
-                                </div>
-                                {/* Decorative elements */}
-                                <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-full blur-xl" />
-                                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-accent-light/20 rounded-full blur-2xl" />
-                            </div>
-                        </div>
-                    </div>
-                </section>
 
                 {/* --- FEATURES SECTION --- */}
                 <section id="features" className="py-24 lg:py-32 bg-white">
